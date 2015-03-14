@@ -1,7 +1,7 @@
 var HEIGHT = 800, WIDTH = 800;
 var NUMCELLSVERT = 80;
-var NUMCELLSHORZ = NUMCELLSVERT/HEIGHT*WIDTH;
-var CELLSIZE = HEIGHT/NUMCELLSVERT;
+var NUMCELLSHORZ = Math.floor(NUMCELLSVERT/HEIGHT*WIDTH); 
+var CELLSIZE = Math.floor(HEIGHT/NUMCELLSVERT);
 var TIMESTEP = 100;
 
 var cells = [];
@@ -28,13 +28,34 @@ pauseButton.addEventListener("click", function () {
 resetButton.addEventListener("click", init);
 
 init();
-startWithGlider();
+startPattern();
 
 function run() {
   if (!isPaused) {
     step();
     setTimeout(run, TIMESTEP);
   }
+}
+
+function startPattern() {
+  centerX = Math.floor((NUMCELLSHORZ-1)/2);
+  centerY = Math.floor((NUMCELLSVERT-1)/2);
+  cells[centerY][centerX] = 1;
+  cells[centerY+1][centerX] = 1;
+  cells[centerY][centerX-1] = 1;
+  cells[centerY][centerX+1] = 1;
+  cells[centerY-2][centerX-5] = 1;
+  cells[centerY-2][centerX-6] = 1;
+  cells[centerY-2][centerX-7] = 1;
+  cells[centerY-3][centerX-5] = 1;
+  cells[centerY-4][centerX-5] = 1;
+  cells[centerY+2][centerX+5] = 1;
+  cells[centerY+2][centerX+6] = 1;
+  cells[centerY+2][centerX+7] = 1;
+  cells[centerY+3][centerX+5] = 1;
+  cells[centerY+4][centerX+5] = 1;
+
+  drawAll();
 }
 
 function init() {
@@ -44,15 +65,6 @@ function init() {
       cells[i][j] = 0;
     }
   }
-  drawAll();
-}
-
-function startWithGlider() {
-  cells[0][1] = 1;
-  cells[1][2] = 1;
-  cells[2][0] = 1;
-  cells[2][1] = 1;
-  cells[2][2] = 1;
   drawAll();
 }
 
