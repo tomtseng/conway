@@ -3,6 +3,7 @@ var NUMCELLSVERT = 80;
 var NUMCELLSHORZ = NUMCELLSVERT/HEIGHT*WIDTH;
 var CELLSIZE = HEIGHT/NUMCELLSVERT;
 var TIMESTEP = 100;
+
 var cells = [];
 
 var canvas = document.getElementById("canv");
@@ -43,7 +44,7 @@ function init() {
       cells[i][j] = 0;
     }
   }
-  draw();
+  drawAll();
 }
 
 function startWithGlider() {
@@ -52,37 +53,31 @@ function startWithGlider() {
   cells[2][0] = 1;
   cells[2][1] = 1;
   cells[2][2] = 1;
-  draw();
+  drawAll();
 }
-
 
 function step() {
-  var steppedCells = [];
-  for (var i = 0; i < NUMCELLSVERT; i++) {
-    steppedCells[i] = [];
-    for (var j = 0; j < NUMCELLSHORZ; j++) {
+  cells = cells.map(function(row, i) {
+    return row.map(function(cell, j) {
       var numNeigh = countNeighbors(i, j);
-      if (cells[i][j]) {
-        steppedCells[i][j] = (2 <= numNeigh && numNeigh <= 3)? 1 : 0;
-      }
-      else steppedCells[i][j] = (numNeigh === 3)? 1 : 0;
-    }
-  }
-  cells = steppedCells;
-  draw();
+      if (cell) return (2 <= numNeigh && numNeigh <= 3)? 1 : 0;
+      else return (numNeigh === 3)? 1 : 0;
+    });
+  });
+  drawAll();
 }
 
-function draw() {
+function drawAll() {
   canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
   canvasContext.beginPath();
-  for (i = 0; i < NUMCELLSVERT; i++) {
-    for (j = 0; j < NUMCELLSHORZ; j++) {
-      if (cells[i][j]) {
+  cells.forEach(function(row, i) {
+    row.forEach(function(cell, j) {
+      if (cell) {
         canvasContext.rect(j*CELLSIZE, i*CELLSIZE, CELLSIZE, CELLSIZE);
         canvasContext.fill();
       }
-    }
-  }
+    });
+  });
 }
 
 function countNeighbors(i, j) {
@@ -104,5 +99,5 @@ function canvasClick(event) {
   var x = event.pageX - canvas.offsetLeft,
       y = event.pageY - canvas.offsetTop;
   cells[Math.floor(y/CELLSIZE)][Math.floor(x/CELLSIZE)] ^= 1;
-  draw();
+  drawAll();
 }
