@@ -42,18 +42,9 @@ function startPattern() {
   centerY = Math.floor((NUMCELLSVERT-1)/2);
   cells[centerY][centerX] = 1;
   cells[centerY+1][centerX] = 1;
+  cells[centerY-1][centerX] = 1;
+  cells[centerY-1][centerX+1] = 1;
   cells[centerY][centerX-1] = 1;
-  cells[centerY][centerX+1] = 1;
-  cells[centerY-2][centerX-5] = 1;
-  cells[centerY-2][centerX-6] = 1;
-  cells[centerY-2][centerX-7] = 1;
-  cells[centerY-3][centerX-5] = 1;
-  cells[centerY-4][centerX-5] = 1;
-  cells[centerY+2][centerX+5] = 1;
-  cells[centerY+2][centerX+6] = 1;
-  cells[centerY+2][centerX+7] = 1;
-  cells[centerY+3][centerX+5] = 1;
-  cells[centerY+4][centerX+5] = 1;
 
   drawAll();
 }
