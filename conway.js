@@ -5,13 +5,13 @@ var CELLSIZE = Math.floor(HEIGHT/NUMCELLSVERT);
 var TIMESTEP = 100;
 
 var cells = [];
+var isPaused = true;
 
 var canvas = document.getElementById("canv");
 var canvasContext = canvas.getContext("2d");
 canvas.addEventListener("click", canvasClick);
 canvas.fillStyle="black";
 
-var isPaused = true;
 var pauseButton = document.getElementById("pause");
 var resetButton = document.getElementById("reset");
 pauseButton.addEventListener("click", function () {
@@ -38,14 +38,13 @@ function run() {
 }
 
 function startPattern() {
-  centerX = Math.floor((NUMCELLSHORZ-1)/2);
-  centerY = Math.floor((NUMCELLSVERT-1)/2);
+  var centerX = Math.floor((NUMCELLSHORZ-1)/2),
+      centerY = Math.floor((NUMCELLSVERT-1)/2);
   cells[centerY][centerX] = 1;
   cells[centerY+1][centerX] = 1;
   cells[centerY-1][centerX] = 1;
   cells[centerY-1][centerX+1] = 1;
   cells[centerY][centerX-1] = 1;
-
   drawAll();
 }
 
@@ -85,16 +84,20 @@ function drawAll() {
 
 function countNeighbors(i, j) {
   var count = 0;
-  var N = NUMCELLSVERT;
-  var M = NUMCELLSHORZ;
-  if (cells[(i+1)%N][j]) count++;
-  if (cells[((i-1)%N+N)%N][j]) count++;
-  if (cells[i][(j+1)%M]) count++;
-  if (cells[i][((j-1)%M+M)%M]) count++;
-  if (cells[(i+1)%N][(j+1)%M]) count++;
-  if (cells[(i+1)%N][((j-1)%M+M)%M]) count++;
-  if (cells[((i-1)%N+N)%N][(j+1)%M]) count++;
-  if (cells[((i-1)%N+N)%N][((j-1)%M+M)%M]) count++;
+  var N = NUMCELLSVERT,
+      M = NUMCELLSHORZ;
+  var nextI = (i+1)%N,
+      prevI = ((i-1)%N+N)%N,
+      nextJ = (j+1)%M,
+      prevJ = ((j-1)%M+M)%M;
+  if (cells[nextI][j]) count++;
+  if (cells[prevI][j]) count++;
+  if (cells[i][nextJ]) count++;
+  if (cells[i][prevJ]) count++;
+  if (cells[nextI][nextJ]) count++;
+  if (cells[nextI][prevJ]) count++;
+  if (cells[prevI][nextJ]) count++;
+  if (cells[prevI][prevJ]) count++;
   return count;
 }
 
