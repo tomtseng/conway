@@ -1,8 +1,13 @@
+(function() {
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+})();
+
 var HEIGHT = 800, WIDTH = 800;
 var NUMCELLSVERT = 80;
-var NUMCELLSHORZ = Math.floor(NUMCELLSVERT/HEIGHT*WIDTH); 
+var NUMCELLSHORZ = Math.floor(NUMCELLSVERT/HEIGHT*WIDTH);
 var CELLSIZE = Math.floor(HEIGHT/NUMCELLSVERT);
-var TIMESTEP = 100;
+var FPS = 30;
 
 var cells = [];
 var isPaused = true;
@@ -32,8 +37,10 @@ startPattern();
 
 function run() {
   if (!isPaused) {
-    step();
-    setTimeout(run, TIMESTEP);
+    setTimeout(function() {
+      step();
+      requestAnimationFrame(run);
+    }, 1000/ FPS);
   }
 }
 
